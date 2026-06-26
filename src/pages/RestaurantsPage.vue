@@ -12,7 +12,7 @@ console.log('BBB', isError)
 </script>
 
 <template>
-  <FlexBox v-if="!isLoading || !isError" direction="column" align="start" class="my-10 mx-20" gap="20px">
+  <FlexBox v-if="!isLoading || !isError" direction="column" align="start" class="my-10 mx-20 mt-25" gap="20px">
     <FlexBox align="center" class="w-full">
       <Tabs default-value="All">
         <TabsList class="w-full justify-start overflow-x-auto bg-foreground text-white p-3">

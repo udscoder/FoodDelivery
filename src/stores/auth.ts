@@ -1,10 +1,12 @@
 import {defineStore} from 'pinia'
 import {ref, computed} from 'vue'
+import {useRouter} from "vue-router";
 
 
 const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token') || '');
   const user = ref(null);
+  const router = useRouter()
 
   const isLoggedIn = computed(() => !!token.value);
 
@@ -14,9 +16,10 @@ const useAuthStore = defineStore('auth', () => {
     };
 
     function logOut () {
-      token.value = null;
+      token.value = '';
       user.value = null;
       localStorage.removeItem('token');
+      router.push('/login')
   }
 
   return {

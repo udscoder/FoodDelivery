@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FlexBox from "@/components/ui/FlexBox.vue";
 import {useRouter} from "vue-router";
+import useAuthStore from "@/stores/auth.ts";
 
 const pages = [
   {
@@ -27,10 +28,16 @@ const pages = [
     id: 5,
     title: "Profile",
     route: "/profile"
+  },
+  {
+    id: 6,
+    title: "LogOut",
+    route: "/login"
   }
 ]
 
 const router = useRouter()
+const auth = useAuthStore()
 </script>
 
 <template>
@@ -41,7 +48,7 @@ const router = useRouter()
       <FlexBox
           v-for="page in pages"
           class="cursor-pointer"
-          @click="router.push(page.route)"
+          @click="page.id == 6 ? auth.logOut() : router.push(page.route)"
       >
         <div>{{ page.title }}</div>
       </FlexBox>

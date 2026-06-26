@@ -5,6 +5,16 @@ import type { ILogin, RegisterDto, AuthResponse } from '@/types/auth'
 const BASE = import.meta.env.VITE_AUTH_URL as string
 
 export const authService = {
+    sendOtp: async (email: string) => {
+        const { data } = await axios.post(`${BASE}/auth/sent-otp`, { email })
+        return data
+    },
+
+    verifyOtp: async (email: string, code: string): Promise<{ otpToken: string }> => {
+        const { data } = await axios.post(`${BASE}/auth/verify-otp`, { email, code })
+        return data
+    },
+
     login: async (dto: ILogin): Promise<AuthResponse> => {
         const { data } = await axios.post<AuthResponse>(`${BASE}/auth/login`, dto)
         return data

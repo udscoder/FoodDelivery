@@ -1,74 +1,38 @@
 <script setup lang="ts">
-import FlexBox from '@/components/ui/FlexBox.vue'
-import {Button} from "@/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {Input} from "@/components/ui/input";
-import * as yup from 'yup'
-import {useField, useForm} from "vee-validate"
-import {useLogin} from "@/hooks/useAuth.ts";
+import { ref } from "vue"
+import FlexBox from "@/components/ui/FlexBox.vue"
+import LoginForm from "@/components/auth/LoginForm.vue"
+import SendOtpForm from "@/components/auth/SendOtpForm.vue"
+import VerifyOtpForm from "@/components/auth/VerifyOtpForm.vue"
+import RegisterForm from "@/components/auth/RegisterForm.vue"
 
-const initialValues = {
-  email: '',
-  password: ''
-}
-
-const schema = yup.object(
-  {
-    email: yup.string().email().required("Email is required"),
-    password: yup.string().required("Password is required")
-  }
-)
-
-const {errors, handleSubmit} = useForm(({
-  initialValues,
-  validationSchema: schema
-}))
-
-const { mutate: login, isPending } = useLogin()
-
-const onSubmit = handleSubmit((values) => {
-  login(values)
-})
-
+const step = ref<'login' | 'send-otp' | 'verify-otp' | 'register'>('login')
+const registeredEmail = ref('')
+const registeredCode = ref('')
 </script>
 
 <template>
-  <FlexBox class="w-full h-screen ">
-    <form @submit="onSubmit">
-      <FlexBox direction="column" gap="20px" class="p-4 w-125 rounded-2xl border-2 border-secondary">
-
-        <FormField v-slot="{ componentField }" name="email">
-          <FormItem>
-            <FormLabel>Email</FormLabel>
-            <FormControl>
-              <Input type="email" placeholder="Email" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="password">
-          <FormItem>
-            <FormLabel>Password</FormLabel>
-            <FormControl>
-              <Input type="password" placeholder="Password" v-bind="componentField" />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        </FormField>
-
-        <FlexBox direction="column" gap="10px" class="w-full">
-          <Button type="submit" variant="default" class="w-full" :disabled="isPending">Login</Button>
-          <Button type="button" variant="outline" class="w-full">Create Account</Button>
-        </FlexBox>
-
-      </FlexBox>
-    </form>
+  <FlexBox class="w-full h-screen">
+    <LoginForm
+        v-if="step === 'login'"
+        @create-account="step = 'send-otp'"
+    />
+    <SendOtpForm
+        v-else-if="step === 'send-otp'"
+        @success="(email: string) => { registeredEmail = email; step = 'verify-otp' }"
+        @back="step = 'login'"
+    />
+    <VerifyOtpForm
+        v-else-if="step === 'verify-otp'"
+        :email="registeredEmail"
+        :code="registeredCode"
+        @success="(code: string) => { registeredCode = code; step = 'register' }"
+        @back="step = 'send-otp'"
+    />
+    <RegisterForm
+        v-else-if="step === 'register'"
+        :email="registeredEmail"
+        :code="registeredCode"
+    />
   </FlexBox>
 </template>

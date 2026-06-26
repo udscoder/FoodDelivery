@@ -12,7 +12,9 @@ export interface IRegister extends ILogin {
 export interface RegisterDto {
     name: string
     email: string
-    password: string
+    password: string,
+    role_id?: number,
+    otpToken: string
 }
 
 export interface AuthResponse {

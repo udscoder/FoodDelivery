@@ -4,6 +4,20 @@ import { authService } from '@/api/auth'
 import useAuthStore from '@/stores/auth'
 import type { ILogin, RegisterDto } from '@/types/auth'
 
+export function useSendOtp() {
+    return useMutation({
+        mutationFn: (email: string) => authService.sendOtp(email),
+    })
+}
+
+export function useVerifyOtp() {
+    return useMutation({
+        mutationFn: ({ email, code }: { email: string; code: string }) =>
+            authService.verifyOtp(email, code),
+    })
+}
+
+
 export function useLogin() {
     const auth = useAuthStore()
     const router = useRouter()
