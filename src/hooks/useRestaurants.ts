@@ -15,6 +15,20 @@ export function useRestaurant(id: string) {
     return useQuery({
         queryKey: computed(() => queryKeys.restaurants.byId(id)),
         queryFn: () => restaurantService.getRestaurant(id),
-        enabled: computed(() => !!id), // don't fetch if id is missing
+        enabled: computed(() => !!id),
+    })
+}
+
+export function useGeneralCategories() {
+    return useQuery({
+        queryKey: computed(() => queryKeys.restaurants.generalCategories),
+        queryFn: () => restaurantService.getGeneralCategories(),
+    })
+}
+
+export function useAds() {
+    return useQuery({
+        queryKey: computed(() => queryKeys.restaurants.ads),
+        queryFn: () => restaurantService.getAds(),
     })
 }

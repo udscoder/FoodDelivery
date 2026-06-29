@@ -17,6 +17,11 @@ const routes = [
         meta: {requiresAuth: true}
     },
     {
+        path: '/cart',
+        component: () => import('@/pages/CartPage.vue'),
+        meta: {requiresAuth: true}
+    },
+    {
         path: '/',
         redirect: '/restaurants',
         meta: {requiresAuth: true}

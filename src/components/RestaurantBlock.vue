@@ -13,7 +13,7 @@ const router = useRouter()
     <img
         :src="restaurant.restaurant_img"
         :alt="restaurant.name"
-        class="w-full h-35 rounded-3xl"
+        class="w-full h-40 rounded-3xl"
     />
 
     <FlexBox direction="column" align="start">

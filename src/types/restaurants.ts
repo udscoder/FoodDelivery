@@ -8,3 +8,15 @@ export interface IRestaurant {
     created_at: string
     restaurant_img: string
 }
+
+export interface IGeneralCategories {
+    id: number
+    name: string
+}
+
+export interface IAds {
+    id: number
+    promotion: string
+    image_ads: string
+    restaurant: string
+}

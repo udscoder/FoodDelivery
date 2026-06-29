@@ -13,12 +13,12 @@ const menuStore = useCardStore()
   <FlexBox
       gap="20px"
       direction="column"
-      class="fixed right-10 bottom-50 top-22 w-90 h-[calc(100%-110px)] min-h-150 bg-card-foreground rounded-4xl border border-border hover:shadow-md transition-shadow text-white p-5 overflow-scroll"
+      class="fixed right-10  top-30 w-90 h-[calc(100%-140px)] min-h-145 bg-card-foreground rounded-4xl border border-border hover:shadow-md transition-shadow text-white p-5 overflow-scroll"
       align="start" justify="start"
   >
     <h1 class="text-2xl font-bold">Cart</h1>
 
-    <FlexBox gap="20px" class="" direction="column" align="start" justify="start">
+    <FlexBox gap="20px" class="max-h-80  overflow-y-auto" direction="column" align="start" justify="start" >
       <FlexBox
           align="start"
           justify="start"

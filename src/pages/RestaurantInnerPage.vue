@@ -46,7 +46,7 @@ const handleAddMenu = (menu: IMenu) => {
 </script>
 
 <template>
-  <FlexBox v-if="!isLoading" align="start" justify="start" gap="30px" class="rounded-md px-5 py-5 pt-23">
+  <FlexBox v-if="!isLoading" align="start" justify="start" gap="30px" class="rounded-md px-5 py-5 mt-26">
     <FlexBox class="w-80" align="start" justify="start" direction="column">
       <BackButton title="All Restaurants" @click="handleClick"/>
     </FlexBox>
