@@ -1,6 +1,10 @@
 export const queryKeys = {
+    profile: {
+        me: ['profile']
+    },
     restaurants: {
         all: ['restaurants'] as const,
+        byCategory: (category_name: string) => ['restaurants', category_name] as const,
         byId: (id: string) => ['restaurants', id] as const,
         menu: (id: number) => ['restaurants', id, 'menu'] as const,
         generalCategories: ['generalCategories'] as const,

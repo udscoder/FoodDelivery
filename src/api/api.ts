@@ -4,18 +4,17 @@ import router from '@/router'
 
 const api = axios.create()
 
-const AUTH_BASE = import.meta.env.VITE_AUTH_BASE
 
-const PROTECTED_URLS = [AUTH_BASE]
+const RESTAURANT_URL = import.meta.env.VITE_RESTAURANT_URL as string
+
+const PUBLIC_URLS = [RESTAURANT_URL]
 
 api.interceptors.request.use((config) => {
     const auth = useAuthStore()
-    const requiresAuth = PROTECTED_URLS.some((url) => config.url?.startsWith(url))
+    const isPublicUrl = PUBLIC_URLS.some((url) => config.url?.startsWith(url))
 
-    if (requiresAuth) {
-        if (auth.token) {
-            config.headers.Authorization = `Bearer ${auth.token}`
-        }
+    if (!isPublicUrl && auth.token) {
+        config.headers.Authorization = `Bearer ${auth.token}`
     }
 
     return config

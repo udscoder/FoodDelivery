@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { useAds, useGeneralCategories, useRestaurants } from "@/hooks/useRestaurants.ts"
+import {useAds, useGeneralCategories, useRestaurants} from "@/hooks/useRestaurants.ts"
 import FlexBox from "@/components/ui/FlexBox.vue"
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import RestaurantBlock from "@/components/RestaurantBlock.vue"
 import emblaCarouselVue from "embla-carousel-vue"
 import { StepForwardIcon, StepBackIcon } from "lucide-vue-next"
-import {computed, nextTick, onMounted, ref, watch} from "vue"
+import {computed, onMounted, ref} from "vue"
 import Autoplay from "embla-carousel-autoplay"
-import { Skeleton } from "@/components/ui/skeleton"
+import router from "@/router";
 
 const canPrev = ref(false)
 const canNext = ref(false)
@@ -25,14 +25,12 @@ const [emblaRef, embla] = emblaCarouselVue({
   slidesToScroll: 1,
 })
 
-const { data: restaurants, isLoading, error: isError } = useRestaurants()
+
+const { data: restaurants, error: isError } = useRestaurants()
 const { data: categories } = useGeneralCategories()
 const { data: ads, isLoading: isAdsLoading } = useAds()
 
-function updateButtons() {
-  canPrev.value = embla.value?.canScrollPrev() ?? false
-  canNext.value = embla.value?.canScrollNext() ?? false
-}
+const filteredCategories = computed(() => [{ id: 0, name: "All" }, ...categories?.value ?? []])
 
 onMounted(() => {
   embla.value?.on('select', updateButtons)
@@ -40,25 +38,21 @@ onMounted(() => {
   embla.value?.on('reInit', updateButtons)
 })
 
-watch(restaurants, () => {
-  nextTick(() => {
-    embla.value?.reInit()
-    updateButtons()
-  })
-})
+function updateButtons() {
+  canPrev.value = embla.value?.canScrollPrev() ?? false
+  canNext.value = embla.value?.canScrollNext() ?? false
+}
 
-const filteredCategories = computed(() => [{ id: 0, name: "All" }, ...categories?.value ?? []])
+function onCategoryChange(val: string) {
+  router.push('/restaurants/filter/' + val)
+}
 </script>
 
 <template>
-  <FlexBox  direction="column" align="start" class="my-10 mx-20 mt-30" gap="20px">
+  <FlexBox v-if="restaurants" direction="column" align="start" class="my-10 mx-20 mt-30" gap="20px">
     <div class="relative w-full">
 
-      <div v-if="isAdsLoading" class="flex gap-3">
-        <Skeleton v-for="n in 3" :key="n" class="flex-[0_0_calc(33.333%-8px)] h-40 rounded-xl" />
-      </div>
-
-      <div v-else ref="adsEmblaRef" class="overflow-hidden w-full">
+      <div ref="adsEmblaRef" class="overflow-hidden w-full">
         <div class="flex gap-3">
           <div
               v-for="ad in ads"
@@ -95,12 +89,12 @@ const filteredCategories = computed(() => [{ id: 0, name: "All" }, ...categories
     </div>
 
     <FlexBox align="center" class="w-full">
-      <Tabs default-value="All">
+      <Tabs default-value="All" @update:model-value="onCategoryChange(String($event))">
         <TabsList class="w-full justify-start overflow-x-auto bg-foreground text-white p-3">
           <TabsTrigger
               v-for="cat in filteredCategories"
               :key="cat.id"
-              :value="String(cat.id)"
+              :value="cat.name"
               class="text-[16px] cursor-pointer font-normal"
           >
             {{ cat.name }}
@@ -114,21 +108,14 @@ const filteredCategories = computed(() => [{ id: 0, name: "All" }, ...categories
 
       <div class="relative">
         <div ref="emblaRef" class="overflow-hidden">
-          <div class="flex gap-3.5">
-            <template v-if="isLoading">
-              <Skeleton v-for="n in 4" :key="n" class="w-84 h-[220px]  rounded-xl" />
-            </template>
-
-
-
+          <div class="flex gap-3.5 items-start">
               <RestaurantBlock
                   v-for="restaurant in restaurants"
                   :key="restaurant.id"
                   v-bind="restaurant"
                   :restaurant="restaurant"
-                  class="flex-[0_0_calc(25%-11px)]"
+                  class="flex-[0_0_calc(25%-11px)] h-auto"
               />
-
           </div>
         </div>
 
@@ -142,7 +129,6 @@ const filteredCategories = computed(() => [{ id: 0, name: "All" }, ...categories
         </button>
       </div>
     </FlexBox>
-
   </FlexBox>
 
   <div v-if="isError">Error loading restaurants</div>

@@ -6,7 +6,8 @@ export interface IRestaurant {
     address: string
     is_open: boolean
     created_at: string
-    restaurant_img: string
+    restaurant_img: string,
+    categories: IGeneralCategories[]
 }
 
 export interface IGeneralCategories {

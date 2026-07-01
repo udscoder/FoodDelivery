@@ -1,12 +1,20 @@
 import { useQuery } from '@tanstack/vue-query'
 import { restaurantService } from '@/api/restaurants.ts'
 import { queryKeys } from './queryKeys'
-import {computed,} from "vue";
+import {computed, type Ref,} from "vue";
 
 export function useRestaurants() {
     return useQuery({
         queryKey: queryKeys.restaurants.all,
         queryFn: restaurantService.getRestaurants,
+        staleTime: 1000 * 60 * 5
+    })
+}
+
+export function useRestaurantsByCategory(ctg: Ref<string>) {
+    return useQuery({
+        queryKey: computed(() => queryKeys.restaurants.byCategory(ctg.value)),
+        queryFn: () => restaurantService.getRestaurantsByCategory(ctg.value),
         staleTime: 1000 * 60 * 5
     })
 }
