@@ -5,31 +5,14 @@ import {PlusIcon, Minus, FrownIcon} from "lucide-vue-next";
 import {Button} from "@/components/ui/button";
 import {formatPrice} from "@/lib/utils.ts";
 import {onMounted} from "vue";
-import {useSendOrder} from "@/hooks/useMenus.ts";
 
 const menuStore = useCardStore()
-
-const {mutate: sendOrder} = useSendOrder()
 
 onMounted(() => {
     menuStore.selectedMenus = JSON.parse(localStorage.getItem('selectedMenus') || '[]')
 })
 
-function handleSend () {
-  sendOrder({
-    resId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    currency: "USD",
-    items: [
-      {
-        menuItemId: 0,
-        name: "Cheeseburger",
-        qty: 2,
-        price: 12.5
-      }
-    ]
-      }
-  )
-}
+const emit = defineEmits<{ (e: 'send-order'): void }>()
 
 </script>
 
@@ -98,7 +81,7 @@ function handleSend () {
       <h2 class="font-bold text-[16px]">5,100 sum</h2>
     </FlexBox>
 
-    <Button v-if="menuStore.getSelectedMenus.length > 0" @click="handleSend" class="flex absolute bottom-5 left-2 w-[calc(100%-20px)] justify-between  h-15  bg-primary text-white mt-25 rounded-2xl" :variant="null">
+    <Button v-if="menuStore.getSelectedMenus.length > 0" @click="emit('send-order')" class="flex absolute bottom-5 left-2 w-[calc(100%-20px)] justify-between  h-15  bg-primary text-white mt-25 rounded-2xl" :variant="null">
       <h1 class="text-[16px] font-medium">Next</h1>
       <h2 class="text-[18px] font-bold">180 000 sum</h2>
     </Button>

@@ -1,16 +1,14 @@
 import {defineStore} from 'pinia'
 import {ref, computed} from 'vue'
-import {useRouter} from "vue-router";
 import type {IUser} from "@/types/auth.ts";
 import {authService} from "@/api/auth.ts";
 
 
 const useAuthStore = defineStore('auth', () => {
-  const token = ref(localStorage.getItem('token') || '');
-  const user = ref();
-  const router = useRouter()
+    const token = ref(localStorage.getItem('token') || '');
+    const user = ref();
 
-  const isLoggedIn = computed(() => !!token.value);
+    const isLoggedIn = computed(() => !!token.value);
 
     async function initialize() {
         if (!token.value) return
@@ -23,7 +21,6 @@ const useAuthStore = defineStore('auth', () => {
                     {
                         name: data.name,
                         role: data.role,
-                        id: data.id,
                         permissions: data.permissions,
                         email: data.email,
                         phone_number: data.phone_number,
@@ -46,23 +43,22 @@ const useAuthStore = defineStore('auth', () => {
         localStorage.setItem('user', JSON.stringify(u));
     }
 
-    function logOut () {
-      token.value = '';
-      user.value = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('selectedMenus');
-      router.push('/login')
-  }
+    function logOut() {
+        token.value = '';
+        user.value = null;
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('selectedMenus');
+    }
 
-  return {
-      token,
-      user,
-      isLoggedIn,
-      initialize,
-      setToken,
-      setUser,
-      logOut
-  }
+    return {
+        token,
+        user,
+        isLoggedIn,
+        initialize,
+        setToken,
+        setUser,
+        logOut
+    }
 })
 export default useAuthStore

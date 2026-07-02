@@ -28,13 +28,13 @@ export interface AuthResponse {
     phone_number: string,
     user_id: number
     role: Role,
-    role_id: number
+    role_id: number,
 }
 
 export interface IUser {
     name: string
     role: Role,
-    id: number
+    id?: number
     permissions: string[]
     email: string
     phone_number: string,

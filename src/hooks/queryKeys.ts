@@ -14,4 +14,11 @@ export const queryKeys = {
         all: ['menus'] as const,
         byRestaurantId: (restaurant_id: string) => ['menus', restaurant_id] as const,
     },
+    orders: {
+        all: ['orders'] as const,
+        byId: (id: string) => ['orders', id] as const,
+    },
+    users: {
+        users: ['users'] as const,
+    }
 }

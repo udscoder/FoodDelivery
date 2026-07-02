@@ -3,13 +3,14 @@ import FlexBox from "@/components/ui/FlexBox.vue";
 import {useRestaurant} from "@/hooks/useRestaurants.ts";
 import BackButton from "@/components/BackButton.vue";
 import {useRoute, useRouter} from "vue-router";
-import {useChooseMenu, useMenus} from "@/hooks/useMenus.ts";
+import {useMenus} from "@/hooks/useMenus.ts";
 import RestaurantMenuBlock from "@/components/RestaurantMenuBlock.vue";
 import CartBlock from "@/components/CartBlock.vue";
 import type {IMenu} from "@/types/menu.ts";
 import useCardStore from "@/stores/menu.js";
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {nextTick, onMounted, ref, watch} from "vue";
+import {useSendOrder} from "@/hooks/useOrders.ts";
 
 const router = useRouter();
 
@@ -25,7 +26,7 @@ let isClickScrolling = false //
 const {data: restaurant,} = useRestaurant(id)
 const {data: menus} = useMenus(id)
 
-const {mutate: chooseMenu} = useChooseMenu()
+const {mutate: sendOrder} = useSendOrder()
 
 function filteredMenus(list: IMenu[]) {
   return (list ?? []).map((menu: IMenu) => ({
@@ -47,21 +48,27 @@ const handleAddMenu = (menu: IMenu) => {
     })
 
     localStorage.setItem('selectedMenus', JSON.stringify(cardStore.selectedMenus))
-
-    chooseMenu({
-      res_id: restaurant?.value?.id || '',
-      menu_id: menu.id.toString(),
-      qty: cardStore?.getSelectedMenus?.find(m => m.id === menu.id)?.quantity ?? 0
-    }, {
-      onSuccess: () => {
-        console.log("Menu added successfully")
-      }
-    })
   } else {
     cardStore.selectedMenus.push({...menu, quantity: 1})
     localStorage.setItem('selectedMenus', JSON.stringify(cardStore.selectedMenus))
-    // chooseMenu(restaurant?.value?.id, menu.id, selectedMenu.quantity)
   }
+}
+
+function handleSendOrder() {
+  const updatedList = cardStore.selectedMenus.map((menu) => ({
+    menuItemId: menu.id,
+    name: menu.name,
+    qty: menu.quantity,
+    price: menu.price
+  }))
+
+  sendOrder({
+    res_id: restaurant?.value?.id || '',
+    currency: 'UZS',
+    items: updatedList
+  }, {
+    onSuccess: () => "Success"
+  })
 }
 
 function updateActiveTabFromScroll() {
@@ -191,6 +198,6 @@ onMounted(() => window.removeEventListener('scroll', onScroll))
       </FlexBox>
     </FlexBox>
 
-    <CartBlock/>
+    <CartBlock @send-order="handleSendOrder"/>
   </FlexBox>
 </template>

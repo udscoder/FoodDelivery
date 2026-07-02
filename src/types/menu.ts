@@ -26,23 +26,3 @@ export interface ICart {
     qty: number
 }
 
-export interface IOrder {
-    id: string;
-    items: OrderItem[];
-    totalPrice: number;
-    discount: number;
-    newDiscountPrice: number;
-    statusDiscount: string;
-    img: string;
-    deliveryTime: string;
-    promotion: string;
-    name: string;
-}
-
-interface OrderItem {
-    id: string;
-    menuItemId: string;
-    name: string;
-    qty: number;
-    price: number;
-}

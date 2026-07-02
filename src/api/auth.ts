@@ -29,7 +29,7 @@ export const authService = {
         return data
     },
 
-    getMe: async (): Promise<AuthResponse['user']> => {
+    getMe: async (): Promise<AuthResponse> => {
         const { data } = await api.get(`${BASE}/auth/me`,)
         return data
     },
